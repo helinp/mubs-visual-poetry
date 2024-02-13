@@ -1,18 +1,5 @@
-export function modalHandler(modalId) {
-    var elemsModal = document.querySelectorAll('.modal');
-    var instancesModal = M.Modal.init(elemsModal, {
-        opacity: 0.5,
-        inDuration: 250,
-        outDuration: 250
-    });
-    var modalResult = document.getElementById(modalId);
-    var instanceModal = M.Modal.getInstance(modalResult);
-    instanceModal.open();
-}
-
 function getModalDimension(modalId, dimension) {
-    const modalElement = document.getElementById(modalId).getElementsByClassName('modal-content')[0];
-
+    const modalElement = document.getElementById(modalId);
     if (!modalElement) {
         console.error('Modal not found');
         throw new Error('Modal not found');
@@ -20,20 +7,31 @@ function getModalDimension(modalId, dimension) {
 
     const computedStyle = window.getComputedStyle(modalElement);
 
-    // Calcul de la dimension basée sur l'argument 'dimension'
+    // Utiliser offsetWidth et offsetHeight pour obtenir la largeur et la hauteur totales
     let sizeWithPadding = dimension === 'width' ? modalElement.offsetWidth : modalElement.offsetHeight;
-    
-    if(dimension === 'width') {
-        var paddingOne = parseInt(computedStyle.paddingLeft, 10);
-        var paddingTwo = parseInt(computedStyle.paddingRight, 10);
+
+    let paddingOne, paddingTwo;
+    if (dimension === 'width') {
+        paddingOne = parseInt(computedStyle.paddingLeft, 10);
+        paddingTwo = parseInt(computedStyle.paddingRight, 10);
     } else {
-        var paddingOne = parseInt(computedStyle.paddingTop, 10);
-        var paddingTwo = parseInt(computedStyle.paddingBottom, 10);
+        paddingOne = parseInt(computedStyle.paddingTop, 10);
+        paddingTwo = parseInt(computedStyle.paddingBottom, 10);
     }
-   
-    // Calculer la dimension du contenu sans le padding
-    let sizeWithoutPadding = sizeWithPadding - paddingOne - paddingTwo;
-    
+
+    // Pour obtenir la dimension du contenu sans le padding, nous devons ajuster notre approche
+    // Nous utilisons computedStyle.width/height qui incluent le padding, puis nous soustrayons le padding
+    // Convertir computedStyle.width/height en valeur numérique pour soustraire le padding
+    let computedSizeWithoutPadding;
+    if (dimension === 'width') {
+        computedSizeWithoutPadding = parseFloat(computedStyle.width);
+    } else {
+        computedSizeWithoutPadding = parseFloat(computedStyle.height);
+    }
+
+    // La valeur calculée peut être directement ajustée par le padding
+    let sizeWithoutPadding = computedSizeWithoutPadding - paddingOne - paddingTwo;
+
     // Arrondir la valeur si nécessaire
     return Math.round(sizeWithoutPadding);
 }

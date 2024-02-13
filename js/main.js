@@ -2,7 +2,7 @@
 import { removeSpecialChars, convertAccentedLetters } from "./poeticUtils.js";
 import { poeticCirclesCanvas } from "./poeticCirclesCanvas.js";
 import { poeticCirclesPdf } from "./poeticCirclesPdf.js";
-import { modalHandler, getModalWidth, getModalHeight } from "./modalUtils.js";
+import { getModalWidth, getModalHeight } from "./modalUtils.js";
 
 document.addEventListener('DOMContentLoaded', function () {
     // set le texte par défaut
@@ -16,14 +16,12 @@ une confidente,
 et survivre à cette soeur 
 en d'autres roses absente.`;
 
-    // resize textarea materialize
-    M.textareaAutoResize(document.getElementById('sentence'));
-
-
     // hide div.color-picker on load
     for (const element of document.getElementsByClassName('color-picker')) {
         element.style.display = 'none';
     }
+
+    document.getElementById('iframe-div').style.display = 'none';
 
 });
 
@@ -38,10 +36,11 @@ document.getElementById('generateCanvasButton').addEventListener('click', functi
     // Modal et taille
     var modalId = 'modal-result';
 
-    modalHandler(modalId);
+    var modal = new bootstrap.Modal(document.getElementById(modalId));
+    modal.show();
 
-    var modalWidth = getModalWidth(modalId);
-    var modalHeight = getModalHeight(modalId);
+    var modalWidth = 760; //getModalWidth(modalId);
+    var modalHeight = 200;
 
     // write in canvas
     let poeticCanvas = new poeticCirclesCanvas('poeticCanvas', modalWidth, modalHeight, cleanSentence);
@@ -80,7 +79,6 @@ document.getElementById('useCustomGradient').addEventListener('change', function
         element.style.display = this.checked ? 'block' : 'none';
     }
 });
-
 
 function setOptions(poeticObject) {
     // set options

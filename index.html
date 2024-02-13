@@ -1,139 +1,147 @@
 <!DOCTYPE html>
-<html>
+<html data-theme="light">
 
 <head>
     <meta charset="UTF-8">
-    <title>Amaury Circles</title>
-    <link rel="stylesheet" href="node_modules/modern-normalize/modern-normalize.css">
+    <title>Visual Poetry</title>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="./css/style.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 
     <script src="https://github.com/devongovett/pdfkit/releases/download/v0.10.0/pdfkit.standalone.js"></script>
     <script src="https://github.com/devongovett/blob-stream/releases/download/v0.1.3/blob-stream.js"></script>
 </head>
 
 <body>
-    <main class="container">
-        <h1 class="center-align neomorphism-text"><span>Mubs' Visual poetry</span></h1>
-        <section class="neomorphism">
-            <div class="row">
-                <div class="input-field col s12">
-                    <textarea id="sentence" class="materialize-textarea" name="sentence"></textarea>
-                    <label for="sentence">Entrez votre texte</label>
-                </div>
+    <main class="container mt-4">
+        <div class="row">
+            <div class="col-12 text-center">
+                <h1 class="mb-4 neomorphism-text"><span>Mubs' Visual poetry</span></h1>
             </div>
-
-            <div class="row">
-                <div class="input-field col m2 s12">
-                    <input type="number" id="circleSizeMax" name="circleSize" value="10" min="10" max="100">
-                    <label for="circleSizeMax">Taille maximale</label>
-                </div>
-                <div class="input-field col m2 s12">
-                    <input type="number" id="circleSizeMin" name="circleSize" value="5" min="1" max="100">
-                    <label for="circleSizeMin">Taille minimale</label>
-                </div>
-                <div class="input-field col m2 s12">
-                    <input type="number" id="circleSpacing" name="circleSpacing" value="10" min="-10" max="20">
-                    <label for="circleSpacing">Espacement</label>
-                </div>
-                <div class="input-field col m2 s12">
-                    <select id="circleShape" name="circleShape">
-                        <option value="circle" selected>Cercle</option>
-                        <option value="ring">Anneau</option>
-                        <option value="square">Carré</option>
-                        <option value="triangle">Triangle</option>
-                        <option value="hexagon">Hexagone</option>
-                        <option value="heart">Coeur</option>
-                        <option value="random">Aléatoire</option>
-                    </select>
-                    <label for="circleShape">Forme</label>
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col m3 s12">
-                    <p>
-                        <label>
-                            <input class="filled-in" type="checkbox" id="showSpaces" name="showSpaces" />
-                            <span>Afficher les espaces</span>
-                        </label>
-                    </p>
-                    <p>
-                        <label>
-                            <input class="filled-in" type="checkbox" id="isCapSensitive" name="isCapSensitive" />
-                            <span>Sensible à la casse</span>
-                        </label>
-                    </p>
-                    <p>
-                        <label>
-                            <input class="filled-in" type="checkbox" id="useLineBreaks" name="useLineBreaks" />
-                            <span>Sauter à la ligne</span>
-                        </label>
-                    </p>
-                    <p>
-                        <label>
-                            <input class="filled-in" type="checkbox" id="useCustomGradient" name="useCustomGradient" />
-                            <span>Personnaliser le dégradé</span>
-                        </label>
-                    </p>
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="input-field col s12 m4">
-                    <input type="color" id="backgroundColor" name="backgroundColor" value="#ffffff">
-                    <label for="backgroundColor" class="active">Couleur de fond</label>
-                </div>
-                <div class="input-field col s6 m4 color-picker">
-                    <input type="color" id="startColor" name="startColor" value="#ff0000">
-                    <label for="startColor" class="active">Couleur de départ</label>
-                </div>
-                <div class="input-field col s6 m4 color-picker">
-                    <input type="color" id="endColor" name="endColor" value="#0000ff">
-                    <label for="endColor" class="active">Couleur de fin</label>
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col s12 center-align">
-                    <a class="btn waves-effect waves-light" id="generateCanvasButton" name="action">Générer Canvas
-                        <i class="material-icons right">blur_on</i>
-                    </a>
-
-                    <a class="btn waves-effect waves-light" id="generatePdfButton" name="action">Générer PDF
-                        <i class="material-icons right">picture_as_pdf</i>
-                    </a>
-                </div>
-            </div>
-            </div>
-
-            <div class="row" id="iframe-div" style="display: none;">
-                <iframe width="100%" height="800px"></iframe>
-            </div>
-        </section>
-
-    </main>
-    <div id="modal-result" class="modal">
-        <div class="modal-content">
-            <canvas id="poeticCanvas">Votre navigateur ne
-                supporte pas le canvas HTML5.</canvas>
         </div>
-        <div class="modal-footer">
-            <a href="#!" class="modal-close waves-effect waves-green btn-flat">Fermer</a>
+        <section class="neomorphism">
+            <form>
+                <div class="mb-3">
+                    <label for="sentence" class="form-label">Entrez votre texte</label>
+                    <textarea id="sentence" class="form-control" name="sentence" rows="10"></textarea>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-3 mb-3">
+                        <label for="circleSizeMax" class="form-label">Taille maximale</label>
+                        <input type="number" class="form-control" id="circleSizeMax" name="circleSize" value="10"
+                            min="10" max="100">
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <label for="circleSizeMin" class="form-label">Taille minimale</label>
+                        <input type="number" class="form-control" id="circleSizeMin" name="circleSize" value="5" min="1"
+                            max="100">
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <label for="circleSpacing" class="form-label">Espacement</label>
+                        <input type="number" class="form-control" id="circleSpacing" name="circleSpacing" value="10"
+                            min="-10" max="20">
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <label for="circleShape" class="form-label">Forme</label>
+                        <select class="form-select" id="circleShape" name="circleShape">
+                            <option value="circle" selected>Cercle</option>
+                            <option value="ring">Anneau</option>
+                            <option value="square">Carré</option>
+                            <option value="triangle">Triangle</option>
+                            <option value="hexagon">Hexagone</option>
+                            <option value="heart">Coeur</option>
+                            <option value="random">Aléatoire</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="showSpaces" name="showSpaces">
+                        <label class="form-check-label" for="showSpaces">
+                            Afficher les espaces
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="isCapSensitive" name="isCapSensitive">
+                        <label class="form-check-label" for="isCapSensitive">
+                            Sensible à la casse
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="useLineBreaks" name="useLineBreaks">
+                        <label class="form-check-label" for="useLineBreaks">
+                            Sauter à la ligne
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="useCustomGradient" name="useCustomGradient">
+                        <label class="form-check-label" for="useCustomGradient">
+                            Personnaliser le dégradé
+                        </label>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <label for="backgroundColor" class="form-label">Couleur de fond</label>
+                        <input type="color" class="form-control form-control-color" id="backgroundColor"
+                            name="backgroundColor" value="#ffffff">
+                    </div>
+                    <div class="col-md-4 mb-3 color-picker">
+                        <label for="startColor" class="form-label">Couleur de départ</label>
+                        <input type="color" class="form-control form-control-color" id="startColor" name="startColor"
+                            value="#ff0000">
+                    </div>
+                    <div class="col-md-4 mb-3 color-picker">
+                        <label for="endColor" class="form-label">Couleur de fin</label>
+                        <input type="color" class="form-control form-control-color" id="endColor" name="endColor"
+                            value="#0000ff">
+                    </div>
+                </div>
+
+                <div class="row mt-2">
+                    <hr />
+                    <div class="text-center">
+                        <a class="btn btn-outline-primary"
+                            id="generateCanvasButton">Générer
+                            Canvas</a>
+                        <a class="btn btn-outline-secondary" id="generatePdfButton">Générer
+                            PDF</a>
+                    </div>
+                </div>
+            </form>
+
+            <div class="row mt-4" id="iframe-div">
+                <div class="col-12">
+                    <iframe width="100%"></iframe>
+                </div>
+            </div>
+
+        </section>
+    </main>
+
+    <div class="modal modal-lg fade" id="modal-result" tabindex="-1" aria-labelledby="pdfModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" style="overflow-x: auto;">
+                    <canvas id="poeticCanvas"></canvas>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                </div>
+            </div>
         </div>
     </div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            var elemsSelect = document.querySelectorAll('select');
-            var instancesSelect = M.FormSelect.init(elemsSelect);
-            var elemsTextarea = document.querySelectorAll('textarea');
-        });
-    </script>
-
     <script type="module" src="./js/main.js"></script>
-
 </body>
 
 </html>

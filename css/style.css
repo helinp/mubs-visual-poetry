@@ -2,7 +2,6 @@ body {
     background-color: #e0e5eb;
 }
 
-
 .neomorphism {
     border-radius: 6px;
     background: #e0e5eb;
@@ -12,7 +11,7 @@ body {
 }
 
 .neomorphism-text span {
-        font-size: 1.7em;
+        font-size: 2.9em;
         text-align: justify;
         text-transform: uppercase;
         color: #e0e5eb;
@@ -31,7 +30,6 @@ input[type="color"] {
     appearance: none;
     width: 100%;
     border: none;
-    margin-top: .6em;
     padding: 0;
     background: linear-gradient(145deg, #ffffff, #e6e6e6);
 
@@ -39,10 +37,22 @@ input[type="color"] {
 
 input[type="color"]::-webkit-color-swatch {
     border: none;
-    box-shadow:  12px 12px 35px #bcc0c5,
-    -12px -12px 35px #ffffff;}
+}
 
 input[type="color"]::-moz-color-swatch {
     border: none;
-    box-shadow:  12px 12px 35px #bcc0c5,
-    -12px -12px 35px #ffffff;}
+}
+
+label {
+  color: #8a8a8a;
+  text-transform: uppercase;
+  font-weight: lighter;
+}
+
+iframe {
+    height: 90vh;
+}
+
+.form-control, .form-select {
+    background-color: #fff6;
+}
