@@ -56,7 +56,7 @@ export class poeticCirclesCanvas extends poeticCircles {
         ctx.fillRect(0, 0, canvas.width, canvas.height);
 
         // mappe les occurences pour obtenir les tailles des cercles
-        let mapOccurences = textOccurences.map(occurence => mapRange(occurence, 1, Math.max(...textOccurences), this.circleSizeMin, this.circleSizeMax));
+        let mapOccurences = this.getMapOccurences(textOccurences);
 
         let colors = [];
         if(this.useCustomGradient){
