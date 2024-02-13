@@ -1,52 +1,27 @@
 
-import { createGradient, getAllCharsWithCounts, mapRange } from './poeticUtils.js';
-import { ctxMakeCircle, ctxMakeSquare, ctxMakeTriangle, ctxMakeHexagon, ctxMakeHeart, ctxMakeRing } from './canvasShapes.js';
+import { getAllCharsWithCounts } from './poeticUtils.js';
+import { mapRange } from './poeticUtils.js';
 
 export class poeticCircles {
 
     // liste des formes possibles (définies dans canvasShapes.js) 
     // et la correspondance avec la fonction qui les dessine
-    shapeFunctions = {
-        'circle': ctxMakeCircle,
-        'square': ctxMakeSquare,
-        'triangle': ctxMakeTriangle,
-        'hexagon': ctxMakeHexagon,
-        'heart': ctxMakeHeart,
-        'ring': ctxMakeRing
-    };
+    shapeFunctions = {};
 
     showSpaces = false;
 
-    constructor(canvasId, width = 500, height = 500, text = '') {
-
-        this.canvas = document.getElementById(canvasId);
-
-        if (!this.canvas) {
-            console.error('Canvas not found');
-            throw new Error('Canvas not found');
-        }
-        this.canvas.width = width;
-        this.canvas.height = height;
-
-        this.text = text;
-        this.width = width;
-        this.height = height;
-    }
-
-    draw(destinationType = 'canvas') {
-        // calcule les variables de génération
+    draw() {
 
         if (!this.isCapSensitive) {
             this.text = this.text.toLowerCase();
         }
 
+        // Calcule les variables de génération
         let charsWithCounts = getAllCharsWithCounts(this.text);
         let textDistinctChars = charsWithCounts.map(char => char[0]); // récupère les caractères uniques
         let textOccurences = charsWithCounts.map(char => char[1]); // récupère les occurences des caractères
 
-        if (destinationType === 'canvas') {
-            this.drawInCanvas(textDistinctChars, textOccurences);
-        }
+        this.drawer(textDistinctChars, textOccurences);
     }
 
     /**
@@ -55,70 +30,66 @@ export class poeticCircles {
      * @param {*} textDistinctChars 
      * @param {*} textOccurences 
      */
-    drawInCanvas(textDistinctChars, textOccurences) {
-        let canvas = this.canvas;
-        let ctx = canvas.getContext('2d');
+    drawer(textDistinctChars, textOccurences) { }
 
-        let radius = this.circleSizeMax
-        let x = radius + (radius / 2);
-        let y = x;
-        let spacing = radius + this.circleSpacing;
+    getMapOccurences(textOccurences) {
+        return textOccurences.map(occurence => mapRange(occurence, 1, Math.max(...textOccurences), this.circleSizeMin, this.circleSizeMax));
+    }
 
-        // Efface le canvas avant de dessiner
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
+    drawLoopHandler(i, textDistinctChars, mapOccurences, colors, x, y, spacing, radius, drawObject) {
 
-        // mappe les occurences pour obtenir les tailles des cercles
-        let mapOccurences = textOccurences.map(occurence => mapRange(occurence, 1, Math.max(...textOccurences), this.circleSizeMin, this.circleSizeMax));
-        let colors = createGradient(this.startColor, this.endColor, textDistinctChars.length);
+        if (this.showSpaces && this.text[i] === ' ') {
+            // do nothing
+        } else {
 
-        // Pour chaque caractère dans this.text
-        for (let i = 0; i < this.text.length; i++) {
-
-            if (this.showSpaces && this.text[i] === ' ') {
-                // do nothing
+            // TODO: utiliser une classe adaptateur pour faire correspondre les méthodes de dessin de canvas et de pdf
+            if (Object.getPrototypeOf(drawObject).hasOwnProperty('fillColor')) {
             } else {
-
-                let indexChar = textDistinctChars.indexOf(this.text[i]); // trouve l'index du caractère dans textDistinctChars
-                let correctedRadius = mapOccurences[indexChar]; // trouve la taille du cercle pour le caractère
-
-                // On commence à dessiner
-                ctx.beginPath();
-
-                // Choix de la forme
-                if (this.circleShape in this.shapeFunctions) {
-                    this.shapeFunctions[this.circleShape](ctx, x, y, correctedRadius);
-                } else {
-                    // Si la forme n'est pas dans la liste, on en choisit une au hasard
-                    let randomShape = Object.keys(this.shapeFunctions)[Math.floor(Math.random() * Object.keys(this.shapeFunctions).length)];
-                    this.shapeFunctions[randomShape](ctx, x, y, correctedRadius);
-                }
-
-                // Remplir le cercle avec la couleur correspondante
-                ctx.fillStyle = colors[indexChar];
-                ctx.fill();
-
-                // On termine de dessiner
-                ctx.closePath();
+                drawObject.beginPath();
             }
 
-            // Mise à jour de la position de x pour le prochain cercle
-            x += spacing;
+            let indexChar = textDistinctChars.indexOf(this.text[i]); // trouve l'index du caractère dans textDistinctChars
+            let correctedRadius = mapOccurences[indexChar]; // trouve la taille du cercle pour le caractère
 
-            // Si le prochain cercle dépasse la largeur du canvas
-            if (x + spacing >= canvas.width) {
-                // On revient à la position de départ
-                x = radius + (radius / 2);
-                // On saute une ligne
-                y += spacing;
+            // Choix de la forme
+            if (this.circleShape in this.shapeFunctions) {
+                this.shapeFunctions[this.circleShape](drawObject, x, y, correctedRadius);
+            } else {
+                // Si la forme n'est pas dans la liste, on en choisit une au hasard
+                let randomShape = Object.keys(this.shapeFunctions)[Math.floor(Math.random() * Object.keys(this.shapeFunctions).length)];
+                this.shapeFunctions[randomShape](drawObject, x, y, correctedRadius);
+            }
+
+            // Remplir le cercle avec la couleur correspondante
+            // TODO: utiliser une classe adaptateur pour faire correspondre les méthodes de dessin de canvas et de pdf
+            if (Object.getPrototypeOf(drawObject).hasOwnProperty('fillColor')) {
+                drawObject.fillColor(colors[indexChar]);
+            } else {
+                drawObject.fillStyle = colors[indexChar];
+                drawObject.fill();
+                drawObject.closePath();
             }
         }
+
+        // Mise à jour de la position de x pour le prochain cercle
+        x += spacing;
+
+        // Si le prochain cercle dépasse la largeur du canvas
+        if (x + spacing >= this.width) {
+            // On revient à la position de départ
+            x = radius + (radius / 2);
+            // On saute une ligne
+            y += spacing;
+        }
+
+        return [x, y];
     }
 
     //
     // Setters
     //
     setBackGroundColor(color) {
-        this.canvas.style.backgroundColor = color;
+        this.backgroundColor = color;
     }
 
     setCircleSizeMin(size) {

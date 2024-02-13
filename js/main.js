@@ -1,6 +1,7 @@
 
 import { removeSpecialChars, convertAccentedLetters } from "./poeticUtils.js";
-import { poeticCircles } from "./poeticCircles.js";
+import { poeticCirclesCanvas } from "./poeticCirclesCanvas.js";
+import { poeticCirclesPdf } from "./poeticCirclesPdf.js";
 import { modalHandler, getModalWidth, getModalHeight} from "./modalUtils.js";
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -20,9 +21,8 @@ en d'autres roses absente.`;
 
 });
 
-
-// Lorsque le bouton "Générer" est cliqué
-document.getElementById('generateButton').addEventListener('click', function() {
+// CANVAS
+document.getElementById('generateCanvasButton').addEventListener('click', function() {
     
     // get the value of #sentence
     var sentence = document.getElementById('sentence').value;
@@ -38,22 +38,45 @@ document.getElementById('generateButton').addEventListener('click', function() {
     var modalHeight = getModalHeight(modalId);
 
     // write in canvas
-    let poeticCanvas = new poeticCircles('poeticCanvas', modalWidth, modalHeight, cleanSentence);
+    let poeticCanvas = new poeticCirclesCanvas('poeticCanvas', modalWidth, modalHeight, cleanSentence);
     
     // set options
-    poeticCanvas.setBackGroundColor(document.getElementById('backgroundColor').value);
-    poeticCanvas.setStartColor(document.getElementById('startColor').value);
-    poeticCanvas.setEndColor(document.getElementById('endColor').value);
-    poeticCanvas.setCircleSizeMin(document.getElementById('circleSizeMin').valueAsNumber);
-    poeticCanvas.setCircleSizeMax(document.getElementById('circleSizeMax').valueAsNumber);
-    poeticCanvas.setCircleSpacing(document.getElementById('circleSpacing').valueAsNumber);
-    poeticCanvas.setCircleShape(document.getElementById('circleShape').value);
-    poeticCanvas.setShowSpaces(document.getElementById('showSpaces').checked);
-    poeticCanvas.setIsCapSensitive(document.getElementById('isCapSensitive').checked);
+    setOptions(poeticCanvas);
+
+    // draw
+    poeticCanvas.draw();
+});
+
+// PDF
+document.getElementById('generatePdfButton').addEventListener('click', function() {
+    // get the value of #sentence
+    var sentence = document.getElementById('sentence').value;
+    var cleanSentence = convertAccentedLetters(sentence);
+    cleanSentence = removeSpecialChars(cleanSentence);
+
+    // write in pdf
+    var poeticPdf = new poeticCirclesPdf(cleanSentence);
     
-    // draw in canvas
-    poeticCanvas.draw('canvas');
+    // set options
+    setOptions(poeticPdf);
+
+    // draw
+    poeticPdf.draw();
+
+    // show div#iframe-div
+    document.getElementById('iframe-div').style.display = 'block';
 
 });
 
-
+function setOptions(poeticObject) {
+    // set options
+    poeticObject.setStartColor(document.getElementById('startColor').value);
+    poeticObject.setEndColor(document.getElementById('endColor').value);
+    poeticObject.setCircleSizeMin(document.getElementById('circleSizeMin').valueAsNumber);
+    poeticObject.setCircleSizeMax(document.getElementById('circleSizeMax').valueAsNumber);
+    poeticObject.setCircleSpacing(document.getElementById('circleSpacing').valueAsNumber);
+    poeticObject.setCircleShape(document.getElementById('circleShape').value);
+    poeticObject.setShowSpaces(document.getElementById('showSpaces').checked);
+    poeticObject.setIsCapSensitive(document.getElementById('isCapSensitive').checked);
+    poeticObject.setBackGroundColor(document.getElementById('backgroundColor').value);
+}

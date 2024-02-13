@@ -56,12 +56,64 @@ export function createGradient(startColor, endColor, steps) {
 }
 
 /**
+ * 
+ * @param {*} startColor RGB HEX
+ * @param {*} endColor RGB HEX
+ * @param {number} steps 
+ * @return {string[]} Un tableau des couleurs du dégradé en CMJN (Cyan, Magenta, Jaune, Noir).
+ */
+export function createGradientCMJN(startColor, endColor, steps) {
+    let startCMYK = hexToCMYK(startColor);
+    let endCMYK = hexToCMYK(endColor);
+    let gradient = [];
+
+    for (let i = 0; i < steps; i++) {
+        let stepCMYK = startCMYK.map((start, index) => {
+            return Math.round(start + ((endCMYK[index] - start) / (steps - 1)) * i);
+        });
+        //[c, m, y, k]
+        gradient.push(stepCMYK);
+    }
+
+    return gradient;
+}
+
+
+/**
+ * Convertit une valeur RGB en CMJN
+ */
+function convertRGBToCMJN(rgb) {
+    let c = 1 - (rgb[0] / 255);
+    let m = 1 - (rgb[1] / 255);
+    let y = 1 - (rgb[2] / 255);
+    let k = Math.min(c, m, y);
+
+    c = ((c - k) / (1 - k)) || 0;
+    m = ((m - k) / (1 - k)) || 0;
+    y = ((y - k) / (1 - k)) || 0;
+
+    // Convertir les valeurs CMJN en pourcentage
+    c = Math.round(c * 100);
+    m = Math.round(m * 100);
+    y = Math.round(y * 100);
+    k = Math.round(k * 100);
+
+    return [c, m, y, k];
+}
+
+/**
  * Convertit une valeur RGB en sa représentation HEX.
  * @param {number[]} rgb - Un tableau contenant les valeurs RGB.
  * @returns {string} La couleur au format HEX.
  */
 function convertRGBToHex(rgb) {
     return '#' + rgb.map(x => x.toString(16).padStart(2, '0')).join('');
+}
+
+function hexToCMYK(hex) {
+    let rgb = hexToRGB(hex);
+    let cmyk = convertRGBToCMJN(rgb);
+    return cmyk; // Retourne un tableau [C, M, Y, K]
 }
 
 /**

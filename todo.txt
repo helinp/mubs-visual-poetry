@@ -1,0 +1,4 @@
+- lettres reccurentes avec transparence
+- saut de ligne
+- utiliser les 360° d'un gradient
+- factoriser au max les classes filles 
