@@ -27,7 +27,6 @@ export class poeticCircles {
         }
         this.canvas.width = width;
         this.canvas.height = height;
-        this.canvas.style.backgroundColor = this.backgroundColor;
 
         this.text = text;
         this.width = width;
@@ -114,7 +113,7 @@ export class poeticCircles {
     // Setters
     //
     setBackGroundColor(color) {
-        this.backgroundColor = color;
+        this.canvas.style.backgroundColor = color;
     }
 
     setCircleSizeMin(size) {
