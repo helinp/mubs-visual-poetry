@@ -33,10 +33,7 @@ function getModalDimension(modalId, dimension) {
    
     // Calculer la dimension du contenu sans le padding
     let sizeWithoutPadding = sizeWithPadding - paddingOne - paddingTwo;
-
-    console.log('sizeWithPadding', sizeWithPadding);
-    console.log('paddingOne', paddingOne);
-    console.log('paddingTwo', paddingTwo);
+    
     // Arrondir la valeur si nécessaire
     return Math.round(sizeWithoutPadding);
 }

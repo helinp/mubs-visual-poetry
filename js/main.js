@@ -28,8 +28,6 @@ document.getElementById('generateButton').addEventListener('click', function() {
     var sentence = document.getElementById('sentence').value;
     var cleanSentence = convertAccentedLetters(sentence);
     cleanSentence = removeSpecialChars(cleanSentence);
-    
-    console.log('cleanSentence', cleanSentence);
 
     // Modal et taille
     var modalId = 'modal-result';
