@@ -49,6 +49,7 @@ document.getElementById('generateButton').addEventListener('click', function() {
     poeticCanvas.setCircleSpacing(document.getElementById('circleSpacing').valueAsNumber);
     poeticCanvas.setCircleShape(document.getElementById('circleShape').value);
     poeticCanvas.setShowSpaces(document.getElementById('showSpaces').checked);
+    poeticCanvas.setIsCapSensitive(document.getElementById('isCapSensitive').checked);
     
     // draw in canvas
     poeticCanvas.draw('canvas');

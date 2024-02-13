@@ -35,6 +35,11 @@ export class poeticCircles {
 
     draw(destinationType = 'canvas') {
         // calcule les variables de génération
+
+        if (!this.isCapSensitive) {
+            this.text = this.text.toLowerCase();
+        }
+
         let charsWithCounts = getAllCharsWithCounts(this.text);
         let textDistinctChars = charsWithCounts.map(char => char[0]); // récupère les caractères uniques
         let textOccurences = charsWithCounts.map(char => char[1]); // récupère les occurences des caractères
@@ -93,9 +98,9 @@ export class poeticCircles {
                 ctx.fill();
 
                 // On termine de dessiner
-                ctx.closePath(); 
+                ctx.closePath();
             }
-            
+
             // Mise à jour de la position de x pour le prochain cercle
             x += spacing;
 
@@ -142,5 +147,9 @@ export class poeticCircles {
 
     setShowSpaces(bool) {
         this.showSpaces = bool;
+    }
+
+    setIsCapSensitive(bool) {
+        this.isCapSensitive = bool;
     }
 }
