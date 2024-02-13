@@ -79,4 +79,5 @@ function setOptions(poeticObject) {
     poeticObject.setShowSpaces(document.getElementById('showSpaces').checked);
     poeticObject.setIsCapSensitive(document.getElementById('isCapSensitive').checked);
     poeticObject.setBackGroundColor(document.getElementById('backgroundColor').value);
+    poeticObject.setUseLineBreaks(document.getElementById('useLineBreaks').checked);
 }

@@ -5,7 +5,7 @@
  * @returns {string} La chaîne nettoyée, sans caractères spéciaux.
  */
 export function removeSpecialChars(str) {
-    return str.replace(/[^a-zA-Z0-9 ]/g, ''); 
+    return str.replace(/[^a-zA-Z0-9 \n\r]/g, ''); 
 }
 
 

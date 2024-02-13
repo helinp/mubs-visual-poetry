@@ -40,6 +40,11 @@ export class poeticCircles {
 
         if (this.showSpaces && this.text[i] === ' ') {
             // do nothing
+        } else if (this.useLineBreaks && this.text[i] === '\n') {
+            // On revient à la position de départ
+            x = radius + (radius / 2);
+            // On saute une ligne
+            y += spacing;
         } else {
 
             // TODO: utiliser une classe adaptateur pour faire correspondre les méthodes de dessin de canvas et de pdf
@@ -122,5 +127,9 @@ export class poeticCircles {
 
     setIsCapSensitive(bool) {
         this.isCapSensitive = bool;
+    }
+
+    setUseLineBreaks(bool) {
+        this.useLineBreaks = bool;
     }
 }
