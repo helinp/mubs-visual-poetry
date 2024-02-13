@@ -39,12 +39,14 @@ export class poeticCircles {
     drawLoopHandler(i, textDistinctChars, mapOccurences, colors, x, y, spacing, radius, drawObject) {
 
         if (this.showSpaces && this.text[i] === ' ') {
-            // do nothing
+            // 
         } else if (this.useLineBreaks && this.text[i] === '\n') {
             // On revient à la position de départ
             x = radius + (radius / 2);
             // On saute une ligne
             y += spacing;
+            return [x, y];
+            
         } else {
 
             // TODO: utiliser une classe adaptateur pour faire correspondre les méthodes de dessin de canvas et de pdf
