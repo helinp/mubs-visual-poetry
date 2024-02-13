@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Amaury Circles</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="./css/style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+</head>
+
+<body>
+    <main class="container">
+        <h1 class="center-align neomorphism-text"><span>Mubs' Visual poetry</span></h1>
+        <section class="neomorphism">
+            <div class="row">
+                <div class="input-field col s12">
+                    <textarea id="sentence" class="materialize-textarea" name="sentence"></textarea>
+                    <label for="sentence">Entrez votre texte</label>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="input-field col s2">
+                    <input type="number" id="circleSizeMax" name="circleSize" value="10" min="10" max="100">
+                    <label for="circleSizeMax">Taille maximale</label>
+                </div>
+                <div class="input-field col s2">
+                    <input type="number" id="circleSizeMin" name="circleSize" value="5" min="1" max="100">
+                    <label for="circleSizeMin">Taille minimale</label>
+                </div>
+                <div class="input-field col s2">
+                    <input type="number" id="circleSpacing" name="circleSpacing" value="10" min="-10" max="20">
+                    <label for="circleSpacing">Espacement</label>
+                </div>
+                <div class="input-field col s2">
+                    <select id="circleShape" name="circleShape">
+                        <option value="circle" selected>Cercle</option>
+                        <option value="ring">Anneau</option>
+                        <option value="square">Carré</option>
+                        <option value="triangle">Triangle</option>
+                        <option value="hexagon">Hexagone</option>
+                        <option value="heart">Coeur</option>
+                        <option value="random">Aléatoire</option>
+                    </select>
+                    <label for="circleShape">Forme</label>
+                </div>
+                <div class="input-field col s2">
+                        <label>
+                            <input class="filled-in" type="checkbox" id="showSpaces" name="showSpaces" />
+                            <span>Afficher les espaces</span>
+                        </label>
+                    
+            </div>
+            </div>
+
+
+            <div class="row">
+                <div class="input-field col s4">
+                    <input type="color" id="startColor" name="startColor" value="#ff0000">
+                    <label for="startColor" class="active">Couleur de départ</label>
+                </div>
+                <div class="input-field col s4">
+                    <input type="color" id="endColor" name="endColor" value="#0000ff">
+                    <label for="endColor" class="active">Couleur de fin</label>
+                </div>
+                <div class="input-field col s4">
+                    <input type="color" id="backgroundColor" name="backgroundColor" value="#ffffff">
+                    <label for="backgroundColor" class="active">Couleur de fond</label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col s12 center-align">
+                    <a class="btn waves-effect waves-light" id="generateButton" name="action">Générer
+                        <i class="material-icons right">blur_on</i>
+                    </a>
+                </div>
+            </div>
+            </div>
+        </section>
+    </main>
+
+    <div id="modal-result" class="modal">
+        <div class="modal-content">
+            <canvas id="poeticCanvas">Votre navigateur ne
+                supporte pas le canvas HTML5.</canvas>
+        </div>
+        <div class="modal-footer">
+            <a href="#!" class="modal-close waves-effect waves-green btn-flat">Fermer</a>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var elemsSelect = document.querySelectorAll('select');
+            var instancesSelect = M.FormSelect.init(elemsSelect);
+            var elemsTextarea = document.querySelectorAll('textarea');
+        });
+    </script>
+
+    <script type="module" src="./js/main.js"></script>
+
+</body>
+
+</html>
