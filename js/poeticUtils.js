@@ -78,6 +78,43 @@ export function createGradientCMJN(startColor, endColor, steps) {
     return gradient;
 }
 
+/**
+ * Créé un dégradé passant par toutes les couleurs CMJN.
+ * @param {number} steps 
+ * @returns 
+ */
+export function createFullGradientCMJN(steps) {
+    let gradient = [];
+    for (let i = 0; i < steps; i++) {
+        // Crée un effet dégradé en modifiant progressivement la valeur de chaque composante
+        let c = (i * 100 / steps) % 100;
+        let m = ((i + steps / 4) * 100 / steps) % 100;
+        let y = ((i + steps / 2) * 100 / steps) % 100;
+        let k = ((i + 3 * steps / 4) * 100 / steps) % 100;
+        gradient.push([Math.round(c), Math.round(m), Math.round(y), Math.round(k)]);
+    }
+    return gradient;
+}
+
+
+/**
+ * Créé un dégradé passant par toutes les couleurs RGB.
+ * @param {number} steps 
+ * @returns 
+ */
+export function createFullGradient(steps) {
+    let gradient = [];
+    let phaseLength = steps / 3;
+
+    for (let i = 0; i < steps; i++) {
+        let r = Math.round(Math.sin(Math.PI / phaseLength * i) * 255) % 255;
+        let g = Math.round(Math.sin(Math.PI / phaseLength * (i + phaseLength / 3)) * 255) % 255;
+        let b = Math.round(Math.sin(Math.PI / phaseLength * (i + 2 * phaseLength / 3)) * 255) % 255;
+        gradient.push(convertRGBToHex([r, g, b]));
+    }
+    return gradient;
+}
+
 
 /**
  * Convertit une valeur RGB en CMJN

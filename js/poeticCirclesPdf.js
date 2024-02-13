@@ -1,5 +1,5 @@
 import { poeticCircles } from './poeticCircles.js';
-import { createGradientCMJN, mapRange } from './poeticUtils.js';
+import { createGradientCMJN, createFullGradientCMJN } from './poeticUtils.js';
 import { pdfSquare, pdfCircle, pdfRing, pdfHeart, pdfTriangle, pdfHexagon } from "./pdfShapes.js";
 
 
@@ -19,13 +19,13 @@ export class poeticCirclesPdf extends poeticCircles {
     doc = null;
     stream = null;
 
-    constructor(text = '', orientation = 'portrait', format = 'A4') {
+    constructor(text = '', orientation = 'landscape', format = 'A4') {
 
         super(); // appelle le constructeur de la classe mère
 
         this.text = text;
 
-        this.doc = new PDFDocument({ size: 'A4', layout: 'portrait' });
+        this.doc = new PDFDocument({ size: format, layout: orientation });
         this.stream = this.doc.pipe(blobStream());
 
         this.width = this.doc.page.width;
@@ -50,7 +50,14 @@ export class poeticCirclesPdf extends poeticCircles {
 
         // mappe les occurences pour obtenir les tailles des cercles
         let mapOccurences = this.getMapOccurences(textOccurences);
-        let colors = createGradientCMJN(this.startColor, this.endColor, textDistinctChars.length);
+
+        let colors = [];
+        if(this.useCustomGradient){
+            colors = createGradientCMJN(this.startColor, this.endColor, textDistinctChars.length);
+        } else {
+            colors = createFullGradientCMJN(textDistinctChars.length);
+        }
+
         let coords = [];
 
         // Pour chaque caractère dans this.text

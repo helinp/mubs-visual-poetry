@@ -2,3 +2,4 @@
 - utiliser les 360° d'un gradient
 - factoriser au max les classes filles 
 - bug premier char.
+- remplir jusqu'à la fin du document/canvas

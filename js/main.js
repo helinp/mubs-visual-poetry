@@ -2,9 +2,9 @@
 import { removeSpecialChars, convertAccentedLetters } from "./poeticUtils.js";
 import { poeticCirclesCanvas } from "./poeticCirclesCanvas.js";
 import { poeticCirclesPdf } from "./poeticCirclesPdf.js";
-import { modalHandler, getModalWidth, getModalHeight} from "./modalUtils.js";
+import { modalHandler, getModalWidth, getModalHeight } from "./modalUtils.js";
 
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     // set le texte par défaut
     document.getElementById('sentence').value = `Été : être pour quelques jours 
 le contemporain des roses ; 
@@ -19,11 +19,17 @@ en d'autres roses absente.`;
     // resize textarea materialize
     M.textareaAutoResize(document.getElementById('sentence'));
 
+
+    // hide div.color-picker on load
+    for (const element of document.getElementsByClassName('color-picker')) {
+        element.style.display = 'none';
+    }
+
 });
 
 // CANVAS
-document.getElementById('generateCanvasButton').addEventListener('click', function() {
-    
+document.getElementById('generateCanvasButton').addEventListener('click', function () {
+
     // get the value of #sentence
     var sentence = document.getElementById('sentence').value;
     var cleanSentence = convertAccentedLetters(sentence);
@@ -39,7 +45,7 @@ document.getElementById('generateCanvasButton').addEventListener('click', functi
 
     // write in canvas
     let poeticCanvas = new poeticCirclesCanvas('poeticCanvas', modalWidth, modalHeight, cleanSentence);
-    
+
     // set options
     setOptions(poeticCanvas);
 
@@ -48,7 +54,7 @@ document.getElementById('generateCanvasButton').addEventListener('click', functi
 });
 
 // PDF
-document.getElementById('generatePdfButton').addEventListener('click', function() {
+document.getElementById('generatePdfButton').addEventListener('click', function () {
     // get the value of #sentence
     var sentence = document.getElementById('sentence').value;
     var cleanSentence = convertAccentedLetters(sentence);
@@ -56,7 +62,7 @@ document.getElementById('generatePdfButton').addEventListener('click', function(
 
     // write in pdf
     var poeticPdf = new poeticCirclesPdf(cleanSentence);
-    
+
     // set options
     setOptions(poeticPdf);
 
@@ -67,6 +73,14 @@ document.getElementById('generatePdfButton').addEventListener('click', function(
     document.getElementById('iframe-div').style.display = 'block';
 
 });
+
+document.getElementById('useCustomGradient').addEventListener('change', function () {
+    // Utilise for...of pour itérer sur la collection HTML
+    for (const element of document.getElementsByClassName('color-picker')) {
+        element.style.display = this.checked ? 'block' : 'none';
+    }
+});
+
 
 function setOptions(poeticObject) {
     // set options
@@ -80,4 +94,5 @@ function setOptions(poeticObject) {
     poeticObject.setIsCapSensitive(document.getElementById('isCapSensitive').checked);
     poeticObject.setBackGroundColor(document.getElementById('backgroundColor').value);
     poeticObject.setUseLineBreaks(document.getElementById('useLineBreaks').checked);
+    poeticObject.setUseCustomGradient(document.getElementById('useCustomGradient').checked);
 }

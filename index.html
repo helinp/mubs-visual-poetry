@@ -4,8 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Amaury Circles</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
-
+    <link rel="stylesheet" href="node_modules/modern-normalize/modern-normalize.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="./css/style.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
@@ -72,21 +71,27 @@
                             <span>Sauter à la ligne</span>
                         </label>
                     </p>
+                    <p>
+                        <label>
+                            <input class="filled-in" type="checkbox" id="useCustomGradient" name="useCustomGradient" />
+                            <span>Personnaliser le dégradé</span>
+                        </label>
+                    </p>
                 </div>
             </div>
 
             <div class="row">
-                <div class="input-field col s6 m4">
-                    <input type="color" id="startColor" name="startColor" value="#ff0000">
-                    <label for="startColor" class="active">Couleur de départ</label>
-                </div>
-                <div class="input-field col s6 m4">
-                    <input type="color" id="endColor" name="endColor" value="#0000ff">
-                    <label for="endColor" class="active">Couleur de fin</label>
-                </div>
                 <div class="input-field col s12 m4">
                     <input type="color" id="backgroundColor" name="backgroundColor" value="#ffffff">
                     <label for="backgroundColor" class="active">Couleur de fond</label>
+                </div>
+                <div class="input-field col s6 m4 color-picker">
+                    <input type="color" id="startColor" name="startColor" value="#ff0000">
+                    <label for="startColor" class="active">Couleur de départ</label>
+                </div>
+                <div class="input-field col s6 m4 color-picker">
+                    <input type="color" id="endColor" name="endColor" value="#0000ff">
+                    <label for="endColor" class="active">Couleur de fin</label>
                 </div>
             </div>
 

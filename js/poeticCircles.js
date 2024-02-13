@@ -132,4 +132,9 @@ export class poeticCircles {
     setUseLineBreaks(bool) {
         this.useLineBreaks = bool;
     }
+
+    setUseCustomGradient(bool) {
+        this.useCustomGradient = bool;
+    }
+    
 }

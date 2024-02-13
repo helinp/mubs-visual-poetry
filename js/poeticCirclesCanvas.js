@@ -1,5 +1,5 @@
 import { poeticCircles } from './poeticCircles.js';
-import { createGradient, mapRange } from './poeticUtils.js';
+import { createGradient, createFullGradient, mapRange } from './poeticUtils.js';
 import { ctxMakeCircle, ctxMakeSquare, ctxMakeTriangle, ctxMakeHexagon, ctxMakeHeart, ctxMakeRing } from './canvasShapes.js';
 
 export class poeticCirclesCanvas extends poeticCircles {
@@ -57,8 +57,14 @@ export class poeticCirclesCanvas extends poeticCircles {
 
         // mappe les occurences pour obtenir les tailles des cercles
         let mapOccurences = textOccurences.map(occurence => mapRange(occurence, 1, Math.max(...textOccurences), this.circleSizeMin, this.circleSizeMax));
-        let colors = createGradient(this.startColor, this.endColor, textDistinctChars.length);
-        let coords = [];
+
+        let colors = [];
+        if(this.useCustomGradient){
+            colors = createGradient(this.startColor, this.endColor, textDistinctChars.length);
+        } else {
+            colors = createFullGradient(textDistinctChars.length);
+        }
+          let coords = [];
 
         // Pour chaque caractère dans this.text
         for (let i = 0; i < this.text.length; i++) {
