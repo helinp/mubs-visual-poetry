@@ -6,7 +6,8 @@ import { getModalWidth, getModalHeight } from "./modalUtils.js";
 
 document.addEventListener('DOMContentLoaded', function () {
     // set le texte par défaut
-    document.getElementById('sentence').value = `Été : être pour quelques jours 
+    document.getElementById('sentence').value = `abcdefghijklmnopqrstuvwxyz
+Été : être pour quelques jours 
 le contemporain des roses ; 
 respirer ce qui flotte autour 
 de leurs âmes écloses. 
@@ -93,4 +94,5 @@ function setOptions(poeticObject) {
     poeticObject.setBackGroundColor(document.getElementById('backgroundColor').value);
     poeticObject.setUseLineBreaks(document.getElementById('useLineBreaks').checked);
     poeticObject.setUseCustomGradient(document.getElementById('useCustomGradient').checked);
+    poeticObject.setGradientType(document.getElementById('gradientType').value);
 }

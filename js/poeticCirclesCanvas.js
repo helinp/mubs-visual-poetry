@@ -1,5 +1,5 @@
 import { poeticCircles } from './poeticCircles.js';
-import { createGradient, createFullGradient, mapRange } from './poeticUtils.js';
+import {  createCustomGradient, createFullGradient } from './colorUtils.js';
 import { ctxMakeCircle, ctxMakeSquare, ctxMakeTriangle, ctxMakeHexagon, ctxMakeHeart, ctxMakeRing } from './canvasShapes.js';
 
 export class poeticCirclesCanvas extends poeticCircles {
@@ -60,9 +60,9 @@ export class poeticCirclesCanvas extends poeticCircles {
 
         let colors = [];
         if(this.useCustomGradient){
-            colors = createGradient(this.startColor, this.endColor, textDistinctChars.length);
+            colors = createCustomGradient(this.startColor, this.endColor, textDistinctChars.length, this.gradientType, 'rgb');
         } else {
-            colors = createFullGradient(textDistinctChars.length);
+            colors = createFullGradient(textDistinctChars.length, 'rgb');
         }
           let coords = [];
 

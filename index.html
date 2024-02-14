@@ -32,22 +32,22 @@
                 </div>
 
                 <div class="row">
-                    <div class="col-md-3 mb-3">
+                    <div class="col-md-2 mb-3">
                         <label for="circleSizeMax" class="form-label">Taille maximale</label>
                         <input type="number" class="form-control" id="circleSizeMax" name="circleSize" value="10"
                             min="10" max="100">
                     </div>
-                    <div class="col-md-3 mb-3">
+                    <div class="col-md-2 mb-3">
                         <label for="circleSizeMin" class="form-label">Taille minimale</label>
                         <input type="number" class="form-control" id="circleSizeMin" name="circleSize" value="5" min="1"
                             max="100">
                     </div>
-                    <div class="col-md-3 mb-3">
+                    <div class="col-md-2 mb-3">
                         <label for="circleSpacing" class="form-label">Espacement</label>
                         <input type="number" class="form-control" id="circleSpacing" name="circleSpacing" value="10"
                             min="-10" max="20">
                     </div>
-                    <div class="col-md-3 mb-3">
+                    <div class="col-md-2 mb-3">
                         <label for="circleShape" class="form-label">Forme</label>
                         <select class="form-select" id="circleShape" name="circleShape">
                             <option value="circle" selected>Cercle</option>
@@ -57,6 +57,14 @@
                             <option value="hexagon">Hexagone</option>
                             <option value="heart">Coeur</option>
                             <option value="random">Aléatoire</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <label for="gradientType" class="form-label">Dégradé</label>
+                        <select class="form-select" id="gradientType" name="gradientType">
+                            <option value="hue" selected>HSL</option>
+                            <option value="interpolation">Interpolation RGB</option>
+
                         </select>
                     </div>
                 </div>

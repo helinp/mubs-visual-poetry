@@ -1,5 +1,5 @@
 import { poeticCircles } from './poeticCircles.js';
-import { createGradientCMJN, createFullGradientCMJN } from './poeticUtils.js';
+import { createCustomGradient, createFullGradient } from './colorUtils.js';
 import { pdfSquare, pdfCircle, pdfRing, pdfHeart, pdfTriangle, pdfHexagon } from "./pdfShapes.js";
 
 
@@ -53,9 +53,9 @@ export class poeticCirclesPdf extends poeticCircles {
 
         let colors = [];
         if(this.useCustomGradient){
-            colors = createGradientCMJN(this.startColor, this.endColor, textDistinctChars.length);
+            colors = createCustomGradient(this.startColor, this.endColor, textDistinctChars.length, this.gradientType, 'cmjn');
         } else {
-            colors = createFullGradientCMJN(textDistinctChars.length);
+            colors = createFullGradient(textDistinctChars.length, 'cmjn');
         }
 
         let coords = [];
