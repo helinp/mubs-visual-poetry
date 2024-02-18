@@ -38,8 +38,8 @@ export class poeticCircles {
 
     drawLoopHandler(i, textDistinctChars, mapOccurences, colors, x, y, spacing, radius, drawObject) {
 
-        if (this.showSpaces && this.text[i] === ' ') {
-            // do nothing
+        if (! this.showSpaces && this.text[i] === ' ') {
+            return [x, y];
         } else if (this.useLineBreaks && this.text[i] === '\n') {
             // On revient à la position de départ
             x = radius + (radius / 2);
