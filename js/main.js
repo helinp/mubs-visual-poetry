@@ -17,11 +17,6 @@ une confidente,
 et survivre à cette soeur 
 en d'autres roses absente.`;
 
-    // hide div.color-picker on load
-    for (const element of document.getElementsByClassName('color-picker')) {
-        element.style.display = 'none';
-    }
-
     document.getElementById('iframe-div').style.display = 'none';
 
 });
@@ -74,12 +69,13 @@ document.getElementById('generatePdfButton').addEventListener('click', function 
 
 });
 
+/*
 document.getElementById('useCustomGradient').addEventListener('change', function () {
     // Utilise for...of pour itérer sur la collection HTML
     for (const element of document.getElementsByClassName('color-picker')) {
         element.style.display = this.checked ? 'block' : 'none';
     }
-});
+});*/
 
 function setOptions(poeticObject) {
     // set options
@@ -93,6 +89,8 @@ function setOptions(poeticObject) {
     poeticObject.setIsCapSensitive(document.getElementById('isCapSensitive').checked);
     poeticObject.setBackGroundColor(document.getElementById('backgroundColor').value);
     poeticObject.setUseLineBreaks(document.getElementById('useLineBreaks').checked);
-    poeticObject.setUseCustomGradient(document.getElementById('useCustomGradient').checked);
+    poeticObject.setUseCustomGradient(true);
     poeticObject.setGradientType(document.getElementById('gradientType').value);
+    poeticObject.setLineSpacing(document.getElementById('lineSpacing').valueAsNumber);
+
 }

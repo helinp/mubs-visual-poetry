@@ -40,15 +40,14 @@ export class poeticCircles {
 
         if (! this.showSpaces && this.text[i] === ' ') {
             return [x, y];
-        } else if (this.showSpaces && this.text[i] === ' ') {
+        } else if (this.showSpaces && this.text[i] === ' ' || this.text[i] === '\n') {
             // ne rien faire
         } else if (this.useLineBreaks && this.text[i] === '\n') {
             // On revient à la position de départ
             x = radius + (radius / 2);
             // On saute une ligne
-            y += spacing;
+            y += this.lineSpacing;
             return [x, y];
-
         } else {
 
             // TODO: utiliser une classe adaptateur pour faire correspondre les méthodes de dessin de canvas et de pdf
@@ -88,7 +87,7 @@ export class poeticCircles {
             // On revient à la position de départ
             x = radius + (radius / 2);
             // On saute une ligne
-            y += spacing;
+            y += this.lineSpacing;
         }
 
         return [x, y];
@@ -143,5 +142,9 @@ export class poeticCircles {
     
     setGradientType(type) {
         this.gradientType = type;
+    }
+
+    setLineSpacing(size) {
+        this.lineSpacing = size;
     }
 }

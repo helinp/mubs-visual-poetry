@@ -48,25 +48,11 @@
                             min="-10" max="20">
                     </div>
                     <div class="col-md-2 mb-3">
-                        <label for="circleShape" class="form-label">Forme</label>
-                        <select class="form-select" id="circleShape" name="circleShape">
-                            <option value="circle" selected>Cercle</option>
-                            <option value="ring">Anneau</option>
-                            <option value="square">Carré</option>
-                            <option value="triangle">Triangle</option>
-                            <option value="hexagon">Hexagone</option>
-                            <option value="heart">Coeur</option>
-                            <option value="random">Aléatoire</option>
-                        </select>
+                        <label for="lineSpacing" class="form-label">Interligne</label>
+                        <input type="number" class="form-control" id="lineSpacing" name="lineSpacing" value="10" min="0"
+                            max="100">
                     </div>
-                    <div class="col-md-3 mb-3">
-                        <label for="gradientType" class="form-label">Dégradé</label>
-                        <select class="form-select" id="gradientType" name="gradientType">
-                            <option value="hue" selected>HSL</option>
-                            <option value="interpolation">Interpolation RGB</option>
-
-                        </select>
-                    </div>
+                    
                 </div>
 
                 <div class="mb-3">
@@ -88,29 +74,44 @@
                             Sauter à la ligne
                         </label>
                     </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" id="useCustomGradient" name="useCustomGradient">
-                        <label class="form-check-label" for="useCustomGradient">
-                            Personnaliser le dégradé
-                        </label>
-                    </div>
+
                 </div>
 
                 <div class="row">
-                    <div class="col-md-4 mb-3">
+                    <div class="col-md-2 mb-3">
                         <label for="backgroundColor" class="form-label">Couleur de fond</label>
                         <input type="color" class="form-control form-control-color" id="backgroundColor"
                             name="backgroundColor" value="#ffffff">
                     </div>
-                    <div class="col-md-4 mb-3 color-picker">
+                    <div class="col-md-2 mb-3 color-picker">
                         <label for="startColor" class="form-label">Couleur de départ</label>
                         <input type="color" class="form-control form-control-color" id="startColor" name="startColor"
                             value="#ff0000">
                     </div>
-                    <div class="col-md-4 mb-3 color-picker">
+                    <div class="col-md-2 mb-3 color-picker">
                         <label for="endColor" class="form-label">Couleur de fin</label>
                         <input type="color" class="form-control form-control-color" id="endColor" name="endColor"
                             value="#0000ff">
+                    </div>
+                    <div class="col-md-2 mb-3">
+                        <label for="gradientType" class="form-label">Dégradé</label>
+                        <select class="form-select" id="gradientType" name="gradientType">
+                            <option value="hue" selected>HSL</option>
+                            <option value="interpolation">Interpolation RGB</option>
+                            
+                        </select>
+                    </div>
+                    <div class="col-md-2 mb-3">
+                        <label for="circleShape" class="form-label">Forme</label>
+                        <select class="form-select" id="circleShape" name="circleShape">
+                            <option value="circle" selected>Cercle</option>
+                            <option value="ring">Anneau</option>
+                            <option value="square">Carré</option>
+                            <option value="triangle">Triangle</option>
+                            <option value="hexagon">Hexagone</option>
+                            <option value="heart">Coeur</option>
+                            <option value="random">Aléatoire</option>
+                        </select>
                     </div>
                 </div>
 
