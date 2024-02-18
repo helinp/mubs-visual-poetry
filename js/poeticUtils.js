@@ -15,6 +15,9 @@ export function removeSpecialChars(str) {
  * @returns {Array.<[string, number]>} Un tableau de tuples [caractère, nombre d'occurrences], trié par caractère.
  */
 export function getAllCharsWithCounts(str) {
+    // retire les espaces et retours à la ligne
+    str = str.replace(/[\n\r\s ]/g, '');
+
     const counts = {};
     str.split('').forEach(char => {
         counts[char] = (counts[char] || 0) + 1;
