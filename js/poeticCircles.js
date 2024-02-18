@@ -40,6 +40,8 @@ export class poeticCircles {
 
         if (! this.showSpaces && this.text[i] === ' ') {
             return [x, y];
+        } else if (this.showSpaces && this.text[i] === ' ') {
+            // ne rien faire
         } else if (this.useLineBreaks && this.text[i] === '\n') {
             // On revient à la position de départ
             x = radius + (radius / 2);
