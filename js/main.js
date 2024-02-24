@@ -1,8 +1,8 @@
 
-import { removeSpecialChars, convertAccentedLetters } from "./poeticUtils.js";
-import { poeticCirclesCanvas } from "./poeticCirclesCanvas.js";
+
 import { poeticCirclesPdf } from "./poeticCirclesPdf.js";
-import { getModalWidth, getModalHeight } from "./modalUtils.js";
+import { poeticCirclesCanvas } from "./poeticCirclesCanvas.js";
+import { textClass } from "./textClass.js";
 
 document.addEventListener('DOMContentLoaded', function () {
     // set le texte par défaut
@@ -24,10 +24,8 @@ en d'autres roses absente.`;
 // CANVAS
 document.getElementById('generateCanvasButton').addEventListener('click', function () {
 
-    // get the value of #sentence
-    var sentence = document.getElementById('sentence').value;
-    var cleanSentence = convertAccentedLetters(sentence);
-    cleanSentence = removeSpecialChars(cleanSentence);
+    
+    let text = new textClass(document.getElementById('sentence').value);
 
     // Modal et taille
     var modalId = 'modal-result';
@@ -39,24 +37,24 @@ document.getElementById('generateCanvasButton').addEventListener('click', functi
     var modalHeight = 200;
 
     // write in canvas
-    let poeticCanvas = new poeticCirclesCanvas('poeticCanvas', modalWidth, modalHeight, cleanSentence);
+    let poeticCanvas = new poeticCirclesCanvas('poeticCanvas', modalWidth, modalHeight, text)
 
     // set options
     setOptions(poeticCanvas);
 
     // draw
     poeticCanvas.draw();
+
+    
 });
 
 // PDF
 document.getElementById('generatePdfButton').addEventListener('click', function () {
-    // get the value of #sentence
-    var sentence = document.getElementById('sentence').value;
-    var cleanSentence = convertAccentedLetters(sentence);
-    cleanSentence = removeSpecialChars(cleanSentence);
+
+    let text = new textClass(document.getElementById('sentence').value);
 
     // write in pdf
-    var poeticPdf = new poeticCirclesPdf(cleanSentence);
+    var poeticPdf = new poeticCirclesPdf(text);
 
     // set options
     setOptions(poeticPdf);
@@ -93,4 +91,5 @@ function setOptions(poeticObject) {
     poeticObject.setGradientType(document.getElementById('gradientType').value);
     poeticObject.setLineSpacing(document.getElementById('lineSpacing').valueAsNumber);
 
+    poeticObject.setInnerFrameWidth(document.getElementById('innerFrameWidth').valueAsNumber);
 }

@@ -1,4 +1,5 @@
 import { mapRange } from "./poeticUtils.js";
+import { textClass } from "./textClass.js";
 
 
 /**
@@ -69,38 +70,6 @@ export function hslToCmnj(h, s, l) {
     return convertRGBToCMJN(rgb);
 }
 
-/** Créé un dégradé entre 2 couleurs HSL 
- *  
- * @param {*} startColor au format HSL
- * @param {*} endColor au format HSL
- * @param {number} steps
- * 
- * @returns {number[]} Un tableau des couleurs du dégradé en HSL.
-*/
-function createGradientHSL(startColor, endColor, steps) {
-    let startHue = startColor[0];
-    let endHue = endColor[0];
-
-    let startSaturation = startColor[1];
-    let endSaturation = endColor[1];
-
-    let startLightness = startColor[2];
-    let endLightness = endColor[2];
-
-    let gradient = [];
-
-    for (let i = 0; i < steps; i++) {
-
-        let stepHue = mapRange(i, 0, steps, startHue, endHue);
-        let stepSaturation = mapRange(i, 0, steps, startSaturation, endSaturation);
-        let stepLightness = mapRange(i, 0, steps, startLightness, endLightness);
-
-        gradient.push([stepHue, stepSaturation, stepLightness]);
-    }
-
-    return gradient;
-}
-
 
 /**************************** */
 
@@ -109,12 +78,12 @@ function createGradientHSL(startColor, endColor, steps) {
  * Controller pour la création de dégradés de couleurs.
  * @param {string} startColor HEX
  * @param {string} endColor HEX
- * @param {number} steps nombre de pas
+ * @param {textClass} text
  * @param {string} gradientType interpolation ou hue
  * @param {string} colorSpace rgb ou cmjn
  * @returns 
  */
-export function createCustomGradient(startColor, endColor, steps, gradientType, colorSpace) {
+export function createCustomGradient(startColor, endColor, text, gradientType, colorSpace) {
 
     let gradient = [];
 
@@ -124,6 +93,8 @@ export function createCustomGradient(startColor, endColor, steps, gradientType, 
     let startHSL = [];
     let endHSL = [];
 
+    let letters = text.getDistinctChars();
+
     if (gradientType === 'hue') {
         startHSL = rgbToHsl(...startRGB);
         endHSL = rgbToHsl(...endRGB);
@@ -131,38 +102,71 @@ export function createCustomGradient(startColor, endColor, steps, gradientType, 
 
     // RGB
     if (colorSpace === 'rgb' && gradientType === 'interpolation') {
-        gradient = createGradientRgb(startColor, endColor, steps);
+        gradient = createGradientRgb(startColor, endColor, letters);
     } else if (colorSpace === 'rgb' && gradientType === 'hue') {
-        let hslGradient = createGradientHSL(startHSL, endHSL, steps);
-        gradient = hslGradient.map(hsl => {
-            return convertRGBToHex(hslToRgb(...hsl));
-        });
+        let hslGradient = createGradientHSL(startHSL, endHSL, letters);
+        gradient = convertGradientHSLtoRGB(hslGradient);
     }
 
     // CMJN
     if (colorSpace === 'cmjn' && gradientType === 'interpolation') {
-        gradient = createGradientCMJN(startColor, endColor, steps);
+        gradient = createGradientCMJN(startColor, endColor, letters);
     } else if (colorSpace === 'cmjn' && gradientType === 'hue') {
-        let hslGradient = createGradientHSL(startHSL, endHSL, steps);
-        gradient = hslGradient.map(hsl => {
-            return hslToCmnj(...hsl);
-        });
+        let hslGradient = createGradientHSL(startHSL, endHSL, letters);
+        gradient = convertGradientHSLtoCMJN(hslGradient);
     }
 
     return gradient;
 }
 
 
-export function createFullGradient(steps, colorSpace) {
+/**
+ * Fonction controller pour la création d'un dégradé complet.
+ * @param {textClass} text
+ * @param {string} colorSpace cmjn ou rgb
+ * @returns 
+ */
+export function createFullGradient(letters, colorSpace) {
     let gradient = [];
     if (colorSpace === 'rgb') {
-        gradient = createFullGradientRGB(steps);
+        gradient = createFullGradientRGB(letters);
     } else if (colorSpace === 'cmjn') {
-        gradient = createFullGradientCMJN(steps);
+        gradient = createFullGradientCMJN(letters);
     }
     return gradient;
 }
 
+
+/** Créé un dégradé entre 2 couleurs HSL 
+ *  
+ * @param {*} startColor au format HSL
+ * @param {*} endColor au format HSL
+ * @param {textClass} text
+ * 
+ * @returns {number[]} Un tableau des couleurs du dégradé en HSL.
+*/
+function createGradientHSL(startColor, endColor, text) {
+    let startHue = startColor[0];
+    let endHue = endColor[0];
+    let gradient = [];
+    let steps = Object.keys(text).length;
+
+    let startSaturation = startColor[1];
+    let endSaturation = endColor[1];
+
+    let startLightness = startColor[2];
+    let endLightness = endColor[2];
+
+    for (let i = 0; i < steps; i++) {
+        let currentLetter = text[i];
+        let stepHue = mapRange(i, 0, steps, startHue, endHue);
+        let stepSaturation = mapRange(i, 0, steps, startSaturation, endSaturation);
+        let stepLightness = mapRange(i, 0, steps, startLightness, endLightness);
+
+        gradient[currentLetter] = [stepHue, stepSaturation, stepLightness];
+    }
+    return gradient;
+}
 
 /**
  * Crée un dégradé de couleurs entre deux couleurs HEX.
@@ -171,18 +175,22 @@ export function createFullGradient(steps, colorSpace) {
  * @param {number} steps - Nombre de pas/couleurs dans le dégradé.
  * @returns {string[]} Un tableau des couleurs du dégradé en HEX.
  */
-function createGradientRgb(startColor, endColor, steps) {
+function createGradientRgb(startColor, endColor, letters) {
     let startRGB = hexToRGB(startColor);
     let endRGB = hexToRGB(endColor);
-    let colors = [];
+    let gradient = [];
+    let steps = Object.keys(letters).length;
+
     for (let i = 0; i < steps; i++) {
-        colors.push(convertRGBToHex([
+        let currentLetter = letters[i];
+
+        gradient[currentLetter] = convertRGBToHex([
             Math.round(startRGB[0] + ((endRGB[0] - startRGB[0]) / (steps - 1)) * i),
             Math.round(startRGB[1] + ((endRGB[1] - startRGB[1]) / (steps - 1)) * i),
             Math.round(startRGB[2] + ((endRGB[2] - startRGB[2]) / (steps - 1)) * i)
-        ]));
+        ]);
     }
-    return colors;
+    return gradient;
 }
 
 /**
@@ -192,124 +200,43 @@ function createGradientRgb(startColor, endColor, steps) {
  * @param {number} steps 
  * @return {string[]} Un tableau des couleurs du dégradé en CMJN (Cyan, Magenta, Jaune, Noir).
  */
-function createGradientCMJN(startColor, endColor, steps) {
+function createGradientCMJN(startColor, endColor, letters) {
     let startCMYK = hexToCMYK(startColor);
     let endCMYK = hexToCMYK(endColor);
     let gradient = [];
+    let steps = Object.keys(letters).length;
 
     for (let i = 0; i < steps; i++) {
+        let currentLetter = letters[i];
+
         let stepCMYK = startCMYK.map((start, index) => {
             return Math.round(start + ((endCMYK[index] - start) / (steps - 1)) * i);
         });
         //[c, m, y, k]
-        gradient.push(stepCMYK);
+        gradient[currentLetter] = stepCMYK;
     }
-
     return gradient;
 }
 
 /**
  * Créé un dégradé passant par toutes les couleurs CMJN.
- * CHATGPT - Je n'y comprends encore rien ^^ 
  * @param {number} steps 
  * @returns 
  */
 export function createFullGradientCMJN(steps = 30) {
-    let gradient = [];
-    // Calcul des étapes pour chaque phase de transition principale
-    let phaseLength = steps / 4;
-    // Couverture d'encre ajustée pour chaque phase, en gardant à l'esprit la limite de 300%
-    let coverageIncrement = (200 / steps) * 4; // Ajustement pour s'assurer que la couverture varie correctement
-
-    for (let i = 0; i < steps; i++) {
-        let phase = Math.floor((i / phaseLength) % 4); // Détermine la phase actuelle
-        let progress = (i % phaseLength) / phaseLength; // Progression dans la phase actuelle
-        let nextProgress = ((i + phaseLength) % phaseLength) / phaseLength; // Progression pour la composante suivante
-
-        // Initialisation des composantes CMJN
-        let c = 0, m = 0, y = 0, k = 0;
-
-        // Calcul de la couverture d'encre pour la composante actuelle et la suivante
-        let currentCoverage = Math.min(100, coverageIncrement * i);
-        let nextCoverage = Math.max(0, currentCoverage - 100); // Ajuste pour la transition entre les composantes
-
-        // Ajustement des composantes en fonction de la phase
-        switch (phase) {
-            case 0: // Transition de C à M
-                c = currentCoverage;
-                m = nextCoverage;
-                break;
-            case 1: // Transition de M à Y
-                m = currentCoverage;
-                y = nextCoverage;
-                break;
-            case 2: // Transition de Y à K
-                y = currentCoverage;
-                k = nextCoverage;
-                break;
-            case 3: // Transition de K à C (réinitialisation pour un nouveau cycle)
-                k = currentCoverage;
-                c = nextCoverage;
-                break;
-        }
-
-        // Assure que la somme des composantes ne dépasse pas 300%
-        let totalCoverage = c + m + y + k;
-        if (totalCoverage > 300) {
-            let excess = totalCoverage - 300;
-            // Réduit proportionnellement chaque composante pour éliminer l'excès
-            c -= excess * (c / totalCoverage);
-            m -= excess * (m / totalCoverage);
-            y -= excess * (y / totalCoverage);
-            k -= excess * (k / totalCoverage);
-        }
-
-        // Ajoute le mélange de couleurs au gradient
-        gradient.push([Math.round(c), Math.round(m), Math.round(y), Math.round(k)]);
-    }
-
-    return gradient;
+    // TO IMPLEMENT
+    console.error('createFullGradientCMJN not implemented');
 }
-
-
-
-
-
 
 /**
  * Créé un dégradé passant par toutes les couleurs RGB.
- * CHATGPT
  * @param {number} steps 
  * @returns 
  */
-export function createFullGradientRGB(steps) {
-    let gradient = [];
-    let phaseLength = steps / 3;
-
-    for (let i = 0; i < steps; i++) {
-        let r, g, b;
-        if (i < phaseLength) {
-            // Phase 1: Rouge à Vert, Bleu constant à 0
-            r = Math.round(255 * (1 - i / phaseLength));
-            g = Math.round(255 * (i / phaseLength));
-            b = 0;
-        } else if (i < 2 * phaseLength) {
-            // Phase 2: Vert à Bleu, Rouge constant à 0
-            r = 0;
-            g = Math.round(255 * (1 - (i - phaseLength) / phaseLength));
-            b = Math.round(255 * ((i - phaseLength) / phaseLength));
-        } else {
-            // Phase 3: Bleu à Rouge, Vert constant à 0
-            r = Math.round(255 * ((i - 2 * phaseLength) / phaseLength));
-            g = 0;
-            b = Math.round(255 * (1 - (i - 2 * phaseLength) / phaseLength));
-        }
-        gradient.push(convertRGBToHex([r, g, b]));
-    }
-    return gradient;
+export function createFullGradientRGB(text) {
+    // TO IMPLEMENT
+    console.error('createFullGradientRGB not implemented');
 }
-
-
 
 /**
  * Convertit une valeur RGB en CMJN
@@ -355,4 +282,21 @@ function hexToCMYK(hex) {
  */
 function hexToRGB(hex) {
     return hex.match(/\w\w/g).map(x => parseInt(x, 16));
+}
+
+/******* */
+function convertGradientHSLtoCMJN(hslGradient) {
+    let gradient = [];
+    for (let letter in hslGradient) {
+        gradient[letter] = hslToCmnj(...hslGradient[letter]);
+    }
+    return gradient;
+}
+
+function convertGradientHSLtoRGB(hslGradient) {
+    let gradient = [];
+    for (let letter in hslGradient) {
+        gradient[letter] = hslToRgb(...hslGradient[letter]);
+    }
+    return gradient;
 }

@@ -1,52 +1,80 @@
 
-import { getAllCharsWithCounts } from './poeticUtils.js';
-import { mapRange } from './poeticUtils.js';
+import { calculateInnerFramePosition, calculateInnerFrameHeight, mapRange } from './poeticUtils.js';
+import { textClass } from './textClass.js';
 
 export class poeticCircles {
 
-    // liste des formes possibles (définies dans canvasShapes.js) 
-    // et la correspondance avec la fonction qui les dessine
     shapeFunctions = {};
-
     showSpaces = false;
+    innerFrameX = 0;
+    innerFrameY = 0;
 
     draw() {
 
-        if (!this.isCapSensitive) {
-            this.text = this.text.toLowerCase();
+        if (this.isCapSensitive === false) {
+            this.text.lowerCase();
         }
 
-        // Calcule les variables de génération
-        let charsWithCounts = getAllCharsWithCounts(this.text);
-        let textDistinctChars = charsWithCounts.map(char => char[0]); // récupère les caractères uniques
-        let textOccurences = charsWithCounts.map(char => char[1]); // récupère les occurences des caractères
+        if(this.showSpaces === false){
+            this.text.removeSpaces();
+        }
 
-        this.drawer(textDistinctChars, textOccurences);
+        if(this.useLineBreaks === false){
+            this.text.removeLineBreaks();
+        }
+
+        // calcule position de l'inner frame
+        let maxInnerFrameHeight = calculateInnerFrameHeight(
+            this.text, 
+            this.circleSizeMax, 
+            this.circleSpacing, 
+            this.innerFrameWidth, 
+            this.lineSpacing
+        );
+
+        this.innerFrameHeight = maxInnerFrameHeight;
+
+        let innerPosition = calculateInnerFramePosition(
+            this.width, 
+            this.height, 
+            this.innerFrameWidth, 
+            maxInnerFrameHeight
+        );
+
+        this.innerFrameX = innerPosition[0];
+        this.innerFrameY = innerPosition[1];
+
+        this.drawer(this.text);
     }
+
+    drawer(textDistinctChars, textOccurences) {}
 
     /**
-     * Dessine dans le canvas.
      * 
-     * @param {*} textDistinctChars 
-     * @param {*} textOccurences 
+     * @param {number} i 
+     * @param {textClass} text 
+     * @param {*} colors 
+     * @param {*} x 
+     * @param {*} y 
+     * @param {*} spacing 
+     * @param {*} radius 
+     * @param {*} drawObject 
+     * @returns 
      */
-    drawer(textDistinctChars, textOccurences) { }
+    drawLoopHandler(i, text, colors, x, y, spacing, radius, drawObject) {
 
-    getMapOccurences(textOccurences) {
-        return textOccurences.map(occurence => mapRange(occurence, 1, Math.max(...textOccurences), this.circleSizeMin, this.circleSizeMax));
-    }
+        let currentLetter = text.getText()[i];
+        let letterOccurences = text.getLetterOccurences(currentLetter);
 
-    drawLoopHandler(i, textDistinctChars, mapOccurences, colors, x, y, spacing, radius, drawObject) {
-
-        if (! this.showSpaces && this.text[i] === ' ') {
+        if (! this.showSpaces && currentLetter === ' ') {
             return [x, y];
-        } else if (this.showSpaces && this.text[i] === ' ' || this.text[i] === '\n') {
+        } else if (this.showSpaces && currentLetter === ' ') {
             // ne rien faire
-        } else if (this.useLineBreaks && this.text[i] === '\n') {
+        } else if (this.useLineBreaks && currentLetter === '\n') {
             // On revient à la position de départ
-            x = radius + (radius / 2);
+            x = radius + this.innerFrameX;
             // On saute une ligne
-            y += this.lineSpacing;
+            y += this.lineSpacing + (radius * 2);
             return [x, y];
         } else {
 
@@ -56,8 +84,21 @@ export class poeticCircles {
                 drawObject.beginPath();
             }
 
-            let indexChar = textDistinctChars.indexOf(this.text[i]); // trouve l'index du caractère dans textDistinctChars
-            let correctedRadius = mapOccurences[indexChar]; // trouve la taille du cercle pour le caractère
+            // trouve la taille du cercle pour le caractère
+            // TODO en faire une méthode
+            let correctedRadius = Math.round(mapRange(
+                letterOccurences,
+                text.getSmallerOccurences(),
+                text.getHighestOccurences(),
+                this.circleSizeMin,
+                this.circleSizeMax
+            ));
+
+            // Remplir le cercle avec la couleur correspondante
+            // TODO: utiliser une classe adaptateur pour faire correspondre les méthodes de dessin de canvas et de pdf
+            if (Object.getPrototypeOf(drawObject).hasOwnProperty('fillColor')) {
+                drawObject.fillColor(colors[currentLetter]);
+            }
 
             // Choix de la forme
             if (this.circleShape in this.shapeFunctions) {
@@ -67,27 +108,24 @@ export class poeticCircles {
                 let randomShape = Object.keys(this.shapeFunctions)[Math.floor(Math.random() * Object.keys(this.shapeFunctions).length)];
                 this.shapeFunctions[randomShape](drawObject, x, y, correctedRadius);
             }
-
-            // Remplir le cercle avec la couleur correspondante
-            // TODO: utiliser une classe adaptateur pour faire correspondre les méthodes de dessin de canvas et de pdf
-            if (Object.getPrototypeOf(drawObject).hasOwnProperty('fillColor')) {
-                drawObject.fillColor(colors[indexChar]);
-            } else {
-                drawObject.fillStyle = colors[indexChar];
+  
+            if ( ! Object.getPrototypeOf(drawObject).hasOwnProperty('fillColor')) {
+                drawObject.fillStyle = colors[currentLetter];
                 drawObject.fill();
                 drawObject.closePath();
             }
+
         }
 
         // Mise à jour de la position de x pour le prochain cercle
         x += spacing;
 
         // Si le prochain cercle dépasse la largeur du canvas
-        if (x + spacing >= this.width) {
+        if (x  >= this.innerFrameWidth + this.innerFrameX) {
             // On revient à la position de départ
-            x = radius + (radius / 2);
+            x = radius + this.innerFrameX;
             // On saute une ligne
-            y += this.lineSpacing;
+            y += this.lineSpacing + (radius * 2);
         }
 
         return [x, y];
@@ -96,6 +134,29 @@ export class poeticCircles {
     //
     // Setters
     //
+    backgroundColor = '#ffffff';
+    circleSizeMin = 5;
+    circleSizeMax = 50;
+    circleSpacing = 10;
+    startColor = '#000000';
+    endColor = '#ffffff';
+    circleShape = 'circle';
+    showSpaces = false;
+    isCapSensitive = false;
+    useLineBreaks = false;
+    useCustomGradient = true;
+    gradientType = 'linear';
+    lineSpacing = 10;
+
+    /**
+     * Définit le texte à afficher.
+     * 
+     * @param {textClass}
+     */
+    setText(text) {
+        this.text = text;
+    }
+
     setBackGroundColor(color) {
         this.backgroundColor = color;
     }
@@ -146,5 +207,9 @@ export class poeticCircles {
 
     setLineSpacing(size) {
         this.lineSpacing = size;
+    }
+
+    setInnerFrameWidth(size) {
+        this.innerFrameWidth = size;
     }
 }

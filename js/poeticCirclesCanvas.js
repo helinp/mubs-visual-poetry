@@ -1,5 +1,5 @@
 import { poeticCircles } from './poeticCircles.js';
-import {  createCustomGradient, createFullGradient } from './colorUtils.js';
+import { createCustomGradient, createFullGradient } from './colorUtils.js';
 import { ctxMakeCircle, ctxMakeSquare, ctxMakeTriangle, ctxMakeHexagon, ctxMakeHeart, ctxMakeRing } from './canvasShapes.js';
 
 export class poeticCirclesCanvas extends poeticCircles {
@@ -35,18 +35,20 @@ export class poeticCirclesCanvas extends poeticCircles {
 
     /**
      * Dessine dans le canvas.
-     * 
-     * @param {*} textDistinctChars 
-     * @param {*} textOccurences 
      */
-    drawer(textDistinctChars, textOccurences) {
+    drawer(text) {
+
         let canvas = this.canvas;
         let ctx = canvas.getContext('2d');
 
         let radius = this.circleSizeMax
-        let x = radius + (radius / 2);
-        let y = x;
+        let x = 0;
+        let y = 0;
         let spacing = radius + this.circleSpacing;
+
+        // inner frame
+        x = radius + this.innerFrameX;
+        y = radius + this.innerFrameY;
 
         // Efface le canvas avant de dessiner
         ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -55,22 +57,31 @@ export class poeticCirclesCanvas extends poeticCircles {
         ctx.fillStyle = this.backgroundColor;
         ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-        // mappe les occurences pour obtenir les tailles des cercles
-        let mapOccurences = this.getMapOccurences(textOccurences);
-
         let colors = [];
-        if(this.useCustomGradient){
-            colors = createCustomGradient(this.startColor, this.endColor, textDistinctChars.length, this.gradientType, 'rgb');
+        if (this.useCustomGradient) {
+            colors = createCustomGradient(this.startColor, this.endColor, text, this.gradientType, 'rgb');
         } else {
-            colors = createFullGradient(textDistinctChars.length, 'rgb');
+            colors = createFullGradient(text.getOccurencesLength(), 'rgb');
         }
-          let coords = [];
+        let coords = [];
 
         // Pour chaque caractère dans this.text
-        for (let i = 0; i < this.text.length; i++) {
-            coords = this.drawLoopHandler(i, textDistinctChars, mapOccurences, colors, x, y, spacing, radius, ctx);
+        for (let i = 0; i < this.text.getLength(); i++) {
+            coords = this.drawLoopHandler(i, text, colors, x, y, spacing, radius, ctx);
             x = coords[0];
             y = coords[1];
         }
+    }
+
+    drawInnerFrame() {
+        let canvas = this.canvas;
+        let ctx = canvas.getContext('2d');
+
+        let [x, y] = this.calculateInnerFramePosition();
+
+        ctx.beginPath();
+        ctx.rect(x, y, this.innerFrameWidth, this.innerFrameHeight);
+        ctx.strokeStyle = 'black';
+        ctx.stroke();
     }
 }

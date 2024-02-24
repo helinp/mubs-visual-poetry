@@ -1,7 +1,7 @@
 import { poeticCircles } from './poeticCircles.js';
 import { createCustomGradient, createFullGradient } from './colorUtils.js';
 import { pdfSquare, pdfCircle, pdfRing, pdfHeart, pdfTriangle, pdfHexagon } from "./pdfShapes.js";
-
+import { textClass } from './textClass.js';
 
 export class poeticCirclesPdf extends poeticCircles {
 
@@ -19,7 +19,12 @@ export class poeticCirclesPdf extends poeticCircles {
     doc = null;
     stream = null;
 
-    constructor(text = '', orientation = 'landscape', format = 'A4') {
+    /**
+     * @param {textClass} text 
+     * @param {string} orientation 'landscape' ou 'portrait'
+     * @param {string} format 'ex: A4'
+     */
+    constructor(text, orientation = 'landscape', format = 'A4') {
 
         super(); // appelle le constructeur de la classe mère
 
@@ -35,34 +40,33 @@ export class poeticCirclesPdf extends poeticCircles {
     /**
      * Dessine dans le PDF.
      * 
-     * @param {*} textDistinctChars 
-     * @param {*} textOccurences 
+     * @param {textClass} 
      */
-    drawer(textDistinctChars, textOccurences) {
+    drawer(text) {
 
-        // background color
-        this.doc.rect(0, 0, this.width, this.height).fill(this.backgroundColor);
+       this.doc.rect(0, 0, this.width, this.height).fill(this.backgroundColor);
+       // this.drawInnerFrame(); // debug
 
         let radius = this.circleSizeMax
-        let x = radius + (radius / 2);
-        let y = x;
+        let x = 0;
+        let y = 0;
         let spacing = radius + this.circleSpacing;
 
-        // mappe les occurences pour obtenir les tailles des cercles
-        let mapOccurences = this.getMapOccurences(textOccurences);
+        // inner frame
+        x = radius + this.innerFrameX;
+        y = radius + this.innerFrameY;
 
         let colors = [];
         if(this.useCustomGradient){
-            colors = createCustomGradient(this.startColor, this.endColor, textDistinctChars.length, this.gradientType, 'cmjn');
+            colors = createCustomGradient(this.startColor, this.endColor, text, this.gradientType, 'cmjn');
         } else {
-            colors = createFullGradient(textDistinctChars.length, 'cmjn');
+            colors = createFullGradient(text.getOccurencesLength(), 'cmjn');
         }
-
         let coords = [];
 
         // Pour chaque caractère dans this.text
-        for (let i = 0; i < this.text.length; i++) {
-            coords = this.drawLoopHandler(i, textDistinctChars, mapOccurences, colors, x, y, spacing, radius, this.doc);
+        for (let i = 0; i < this.text.getLength(); i++) {
+            coords = this.drawLoopHandler(i, text, colors, x, y, spacing, radius, this.doc);
             x = coords[0];
             y = coords[1];
         }
@@ -77,4 +81,19 @@ export class poeticCirclesPdf extends poeticCircles {
             }
         });
     }
+
+    /**
+     * Dessine le cadre intérieur.
+     * Debug purpose.
+     */
+    drawInnerFrame() {
+        console.log('drawInnerFrame');
+        console.log('this.innerFrameX', this.innerFrameX);
+        console.log('this.innerFrameWidth', this.innerFrameWidth);
+        console.log('this.innerFrameY', this.innerFrameY);
+        console.log('this.innerFrameHeight', this.innerFrameHeight);
+        this.doc.rect(this.innerFrameX, this.innerFrameY, this.innerFrameWidth, this.innerFrameHeight).stroke();
+        console.log('---------');
+    }
+
 }
