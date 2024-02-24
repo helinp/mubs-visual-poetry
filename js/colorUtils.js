@@ -136,6 +136,12 @@ export function createFullGradient(letters, colorSpace) {
     return gradient;
 }
 
+function shortestHuePath(startHue, endHue) {
+    let directPath = endHue - startHue;
+    let roundPath = (directPath < 0) ? directPath + 360 : directPath - 360;
+    return Math.abs(directPath) < Math.abs(roundPath) ? directPath : roundPath;
+}
+
 
 /** Créé un dégradé entre 2 couleurs HSL 
  *  
@@ -147,7 +153,7 @@ export function createFullGradient(letters, colorSpace) {
 */
 function createGradientHSL(startColor, endColor, text) {
     let startHue = startColor[0];
-    let endHue = endColor[0];
+    let endHue = startColor[0] + shortestHuePath(startColor[0], endColor[0]);
     let gradient = [];
     let steps = Object.keys(text).length;
 
@@ -159,9 +165,10 @@ function createGradientHSL(startColor, endColor, text) {
 
     for (let i = 0; i < steps; i++) {
         let currentLetter = text[i];
-        let stepHue = mapRange(i, 0, steps, startHue, endHue);
-        let stepSaturation = mapRange(i, 0, steps, startSaturation, endSaturation);
-        let stepLightness = mapRange(i, 0, steps, startLightness, endLightness);
+        let stepHue = mapRange(i, 0, steps - 1, startHue, endHue) % 360;
+        if (stepHue < 0) stepHue += 360; // Assurez-vous que la teinte est toujours positive
+        let stepSaturation = mapRange(i, 0, steps - 1, startSaturation, endSaturation);
+        let stepLightness = mapRange(i, 0, steps - 1, startLightness, endLightness);
 
         gradient[currentLetter] = [stepHue, stepSaturation, stepLightness];
     }
