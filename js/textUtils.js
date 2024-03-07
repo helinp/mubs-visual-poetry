@@ -5,7 +5,8 @@
  * @returns {string} La chaîne nettoyée, sans caractères spéciaux.
  */
 export function removeSpecialChars(str) {
-    return str.replace(/[^a-zA-Z0-9 \n\r]/g, ''); 
+  // Utilisation d'une plage Unicode pour inclure les lettres avec diacritiques
+  return str.replace(/[^\w\d\s\n\r\u00C0-\u00FF\u0100-\u017F\u0180-\u024F]/g, ''); 
 }
 
 /**
