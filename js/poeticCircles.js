@@ -23,6 +23,10 @@ export class poeticCircles {
             this.text.removeLineBreaks();
         }
 
+        if(this.ignoreSpecialChars === true){
+            this.text.removeSpecialChars();
+        }
+
         // calcule position de l'inner frame
         let maxInnerFrameHeight = calculateInnerFrameHeight(
             this.text, 
@@ -147,6 +151,7 @@ export class poeticCircles {
     useCustomGradient = true;
     gradientType = 'linear';
     lineSpacing = 10;
+    ignoreSpecialChars = false;
 
     /**
      * Définit le texte à afficher.
@@ -211,5 +216,9 @@ export class poeticCircles {
 
     setInnerFrameWidth(size) {
         this.innerFrameWidth = size;
+    }
+
+    setIgnoreSpecialChars(bool) {
+        this.ignoreSpecialChars = bool;
     }
 }

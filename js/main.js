@@ -90,6 +90,6 @@ function setOptions(poeticObject) {
     poeticObject.setUseCustomGradient(true);
     poeticObject.setGradientType(document.getElementById('gradientType').value);
     poeticObject.setLineSpacing(document.getElementById('lineSpacing').valueAsNumber);
-
+    poeticObject.setIgnoreSpecialChars(document.getElementById('ignoreSpecialChars').checked);
     poeticObject.setInnerFrameWidth(document.getElementById('innerFrameWidth').valueAsNumber);
 }

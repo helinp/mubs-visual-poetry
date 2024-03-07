@@ -1,4 +1,4 @@
-import { getAllCharsWithCounts, convertAccentedLetters, removeSpecialChars } from './textUtils.js';
+import { getAllCharsWithCounts, convertAccentedLetters, removeSpecialChars as removeSpecialCharsUtil } from './textUtils.js';
 
 export class textClass {
 
@@ -8,7 +8,6 @@ export class textClass {
 
         // nettoie le texte
         text = convertAccentedLetters(this.text);
-        text = removeSpecialChars(text);
 
         this.setText(text);
     }
@@ -90,5 +89,9 @@ export class textClass {
         let text =  this.text.replace(/[\n\r]+/g, '');
         text =  this.text.replace(/[\n\r]+/g, ' ').replace(/\s{2,}/g,' ').replace(/^\s+|\s+$/,'')
         this.setText(text);
+    }
+
+    removeSpecialChars() {
+        this.text = removeSpecialCharsUtil(this.text);
     }
 }
