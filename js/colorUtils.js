@@ -303,7 +303,7 @@ function convertGradientHSLtoCMJN(hslGradient) {
 function convertGradientHSLtoRGB(hslGradient) {
     let gradient = [];
     for (let letter in hslGradient) {
-        gradient[letter] = hslToRgb(...hslGradient[letter]);
+        gradient[letter] = convertRGBToHex(hslToRgb(...hslGradient[letter]));
     }
     return gradient;
 }
