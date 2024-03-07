@@ -122,6 +122,16 @@ une confidente,
 et survivre à cette soeur 
 en d'autres roses absente.`);
 
+extraitTexte.ajouterExtrait("Poème turc", `Yaşamayı ciddiye alacaksın, 
+yani o derecede, öylesine ki, 
+mesela, kolların bağlı arkadan, sırtın duvarda, 
+yahut kocaman gözlüklerin, 
+beyaz gömleğinle bir laboratuvarda 
+insanlar için ölebileceksin, 
+hem de yüzünü bile görmediğin insanlar için, 
+hem de hiç kimse seni buna zorlamamışken, 
+hem de en güzel en gerçek şeyin 
+yaşamak olduğunu bildiğin halde.`); 
 
 // Préparation de l'affichage des extraits
 let divExtraits = document.getElementById('choix-extraits');
