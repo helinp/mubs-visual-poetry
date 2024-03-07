@@ -81,6 +81,7 @@ function setOptions(poeticObject) {
     poeticObject.setLineSpacing(document.getElementById('lineSpacing').valueAsNumber);
     poeticObject.setIgnoreSpecialChars(document.getElementById('ignoreSpecialChars').checked);
     poeticObject.setInnerFrameWidth(document.getElementById('innerFrameWidth').valueAsNumber);
+    poeticObject.setConvertAccentedLetters(document.getElementById('convertAccentedLetters').checked);
 }
 
 

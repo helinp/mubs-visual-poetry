@@ -23,6 +23,10 @@ export class poeticCircles {
             this.text.removeLineBreaks();
         }
 
+        if(this.convertAccentedLetters === true){
+            this.text.convertAccentedLetters();
+        }
+        
         if(this.ignoreSpecialChars === true){
             this.text.removeSpecialChars();
         }
@@ -152,6 +156,7 @@ export class poeticCircles {
     gradientType = 'linear';
     lineSpacing = 10;
     ignoreSpecialChars = false;
+    convertAccentedLetters = false;
 
     /**
      * Définit le texte à afficher.
@@ -220,5 +225,9 @@ export class poeticCircles {
 
     setIgnoreSpecialChars(bool) {
         this.ignoreSpecialChars = bool;
+    }
+
+    setConvertAccentedLetters(bool) {
+        this.convertAccentedLetters = bool;
     }
 }

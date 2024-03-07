@@ -1,13 +1,10 @@
-import { getAllCharsWithCounts, convertAccentedLetters, removeSpecialChars as removeSpecialCharsUtil } from './textUtils.js';
+import { getAllCharsWithCounts, convertAccentedLetters as convertAccentedLettersUtil, removeSpecialChars as removeSpecialCharsUtil } from './textUtils.js';
 
 export class textClass {
 
     constructor(text) {
         this.text = text;
         this.originalText = text;
-
-        // nettoie le texte
-        text = convertAccentedLetters(this.text);
 
         this.setText(text);
     }
@@ -93,5 +90,9 @@ export class textClass {
 
     removeSpecialChars() {
         this.text = removeSpecialCharsUtil(this.text);
+    }
+
+    convertAccentedLetters() {
+        this.text = convertAccentedLettersUtil(this.text);
     }
 }
