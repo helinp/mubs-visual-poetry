@@ -39,3 +39,23 @@ export function getAllCharsWithCounts(str) {
 export function convertAccentedLetters(str) {
     return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
 }
+
+/**
+ * Génère une chaîne de caractères où chaque lettre de l'alphabet est répétée selon sa position.
+ * 
+ * @returns string
+ */
+export function generateDuplicatedAlphabet(alphabet = 'abcdefghijklmnopqrstuvwxyz') {
+
+  let result = '';
+
+  // Parcourir chaque lettre de l'alphabet
+  for (let i = 0; i < alphabet.length; i++) {
+    // Dupliquer la lettre selon sa position (i+1) fois
+    for (let j = 0; j <= i; j++) {
+      result += alphabet[i];
+    }
+  }
+
+  return result;
+}
